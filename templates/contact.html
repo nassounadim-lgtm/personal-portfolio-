@@ -1,0 +1,23 @@
+personal-portfolio/templates/contact.html
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Contact</h1>
+
+<p><strong>Email:</strong> {{ profile.email }}</p>
+<p><strong>Location:</strong> {{ profile.location }}</p>
+
+<p><strong>GitHub:</strong>
+    <a href="{{ profile.github_url }}" target="_blank">
+        {{ profile.github_url }}
+    </a>
+</p>
+
+<p><strong>LinkedIn:</strong>
+    <a href="{{ profile.linkedin_url }}" target="_blank">
+        {{ profile.linkedin_url }}
+    </a>
+</p>
+
+{% endblock %}
