@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Financial Portfolio Asset Grades (Machine Learning)</h1>
+
+<p>
+    This page uses a dataset of financial assets and a
+    <strong>multivariate linear regression model</strong>
+    to estimate a grade for each asset in the portfolio.
+    The model uses realistic financial metrics such as
+    average return, volatility, liquidity, risk score, and momentum.
+</p>
+
+<section class="section">
+    <h2>Try it yourself</h2>
+    <p>
+        Enter your own metrics for a hypothetical financial asset
+        and the model will predict a grade for it.
+    </p>
+
+    <form method="POST" class="project-card">
+        {% for name in feature_names %}
+            <div style="margin-bottom: 0.5rem;">
+                <label for="{{ name }}">{{ name.replace("_", " ").title() }}:</label>
+                <input
+                    type="number"
+                    step="0.1"
+                    name="{{ name }}"
+                    id="{{ name }}"
+                    required
+                >
+            </div>
+        {% endfor %}
+        <button type="submit">Predict grade</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red; margin-top: 0.5rem;">{{ error }}</p>
+    {% endif %}
+
+    {% if user_prediction is not none %}
+        <div class="project-card" style="margin-top: 1rem;">
+            <h3>Prediction result</h3>
+            <p>Input metrics:</p>
+            <ul>
+                {% for name, value in user_features.items() %}
+                    <li><strong>{{ name.replace("_", " ").title() }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+            <p>Predicted grade for this asset: <strong>{{ user_prediction }}</strong></p>
+        </div>
+    {% endif %}
+</section>
+
+<section class="section">
+    <h2>Dataset used for training</h2>
+    <p>The model is trained on the CSV file <code>csv/portfolio_data.csv</code>.</p>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr>
+            {% for name in feature_names %}
+                <th>{{ name.replace("_", " ").title() }}</th>
+            {% endfor %}
+            <th>Grade</th>
+        </tr>
+        {% for row in dataset %}
+        <tr>
+            {% for name in feature_names %}
+                <td>{{ row[name] }}</td>
+            {% endfor %}
+            <td>{{ row.grade }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+
+<section class="section">
+    <h2>Predicted grade for my portfolio assets</h2>
+    <p>
+        Each of my portfolio assets has its own financial metrics.
+        Using the same model, the website predicts a grade
+        for each asset in the portfolio.
+    </p>
+
+    <table border="1" cellpadding="6" cellspacing="0">
+        <tr>
+            <th>Asset</th>
+            {% for name in feature_names %}
+                <th>{{ name.replace("_", " ").title() }}</th>
+            {% endfor %}
+            <th>Predicted grade</th>
+        </tr>
+        {% for item in portfolio_predictions %}
+        <tr>
+            <td>{{ item.title }}</td>
+            {% for name in feature_names %}
+                <td>{{ item.features[name] }}</td>
+            {% endfor %}
+            <td>{{ item.predicted_grade }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+
+{% endblock %}
+
+
+
+
